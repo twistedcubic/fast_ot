@@ -1,4 +1,4 @@
-g++ -O3 Sinkhorn.cpp libopenblas.a -o temp -lpthread
+g++ -std=c++11 -O3 Sinkhorn.cpp libopenblas.a -o temp -lpthread
 
 echo "cifar_0"
 ./temp 61314 < ../Data/CIFAR/cifar_0.txt
