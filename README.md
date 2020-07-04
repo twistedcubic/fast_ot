@@ -1,7 +1,7 @@
 
 ## A Study of Performance of Optimal Transport
 
-This is the code repo for our paper **A Study of Performance of Optimal Transport**
+This is the code repo for our paper [**A Study of Performance of Optimal Transport**](https://arxiv.org/abs/2005.01182).
 
 By Yihe Dong, Yu Gao, Richard Peng, Ilya Razenshteyn, Saurabh Sawlani
 
@@ -19,3 +19,10 @@ Data files for comparing optimal transport algorithms are formatted as:
 A format checker for this format is in Data/Verify.cpp
 
 ### Build
+The C++ code can be compiled by e.g.:
+
+`g++ -std=c++11 -O3 Sinkhorn.cpp libopenblas.a -o temp -lpthread`
+
+And run as in [_Run_Sinkhorn.sh](MatrixRescaling/_Run_Sinkhorn.sh).
+
+For ease of use, we also provide compiled [libopenblas.a](MatrixRescaling/libopenblas.a) and [cblas.h](MatrixRescaling/cblas.h), which has been tested on several versions of Ubuntu.

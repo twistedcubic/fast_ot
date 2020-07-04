@@ -55,8 +55,11 @@ D max_(D* c, int n) {
 D _answer, _eta;
 chrono::duration<D> _time;
 int _iter;
-
-D sinkhorn_mc(int r_dim, int c_dim, D * C, D * r, D * c, D eta, D * A) {
+/**
+ Keeping track of only ratios of target and current row and column sums per step, for faster convergence.
+ By Jianbo Ye, modified from sinkhorn() below.
+ **/
+D sinkhorn_ratio_only(int r_dim, int c_dim, D * C, D * r, D * c, D eta, D * A) {
   	D * C0 = new D[r_dim * c_dim];
 	memcpy(C0, C, sizeof(D) * r_dim * c_dim);
 
@@ -140,7 +143,6 @@ D sinkhorn(int r_dim, int c_dim, D * C, D * r, D * c, D eta, D * A) {
 	D * col_dif = new D[c_dim];
 	memcpy(col_dif, col_sum, sizeof(D) * c_dim);
 	cblas_daxpy(c_dim, -1, c, 1, col_dif, 1);
-	//for(int i(0); i < r_dim; i++) printf("%f ", row_dif[i]); printf("\n");
 	
 	D dist_AU = cblas_dasum(r_dim, row_dif, 1) + cblas_dasum(c_dim, col_dif, 1);
 	//cout << dist_AU << endl;
@@ -179,7 +181,7 @@ D sinkhorn(int r_dim, int c_dim, D * C, D * r, D * c, D eta, D * A) {
 			}
 		}
 		row ^= 1;
-		if (1) {
+		if (1) { //adjust this to change convergence check frequency.
 			//printf(".");
 			fflush(stdout);
 			
@@ -263,7 +265,7 @@ int main(int argc, char ** argv) {
 		_eta = mid;
 		printf("Trying eta = %f\n", _eta);
 //		D ans = sinkhorn(r_dim, c_dim, C, r, c, _eta, A);
-		D ans = sinkhorn_mc(r_dim, c_dim, C, r, c, _eta, A);
+		D ans = sinkhorn_ratio_only(r_dim, c_dim, C, r, c, _eta, A);
 		if(abs(ans - OPT) < ACC * OPT) ri = mid;
 		else le = mid;
 		if(OPT == -1) break;
